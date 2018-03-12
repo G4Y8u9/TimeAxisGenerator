@@ -25,7 +25,7 @@ def calc_similar(li, ri):
     return sum(hist_similar(l.histogram(), r.histogram()) for l, r in zip(split_image(li), split_image(ri))) / 16.0
 
 
-def getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h):
+def getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h, threshhold=0.7):
     """
     x, y, w, h means the cut position of the video
     :return: output a srt subtitle file which contains time axis set
@@ -42,7 +42,7 @@ def getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h):
         print("\nimg: %d\timg: %d" % (i-1, i), end='\t')
         ratio = calc_similar(im2, im1)
         print(ratio)
-        if ratio/2.4375 < 0.7:  # idk why sometimes the ratio > 1 so i adjust it with a factor of some number
+        if ratio < threshhold:  # idk why sometimes the ratio > 1 so i adjust it with a factor of some number
             keyFrames.append(i)
             # print("ratio: ", ratio, " < 0.7, add key frame!-------------------")
         # else:
@@ -59,11 +59,11 @@ def getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h):
 """
 used for test
 """
-video_file_path = 'test03.mp4'
+video_file_path = 'your_video.mp4'
 video_frame = 30
-srt_file_path = 'test03.srt'
+srt_file_path = 'your_video.srt'
 x = 560
 y = 900
 w = 800
 h = 140
-getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h)
+getTimeAxis(video_file_path, video_frame, srt_file_path, x, y, w, h, threshhold=0.6)
